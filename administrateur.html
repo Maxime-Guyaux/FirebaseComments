@@ -1,0 +1,55 @@
+<!doctype html>
+<!-- inspiré par copy 2016 by Josh Bivens</p></div> -->
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Administrateur de commentaires</title>
+  <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+
+</head>
+<body>
+<script>
+const refProd = new Firebase("https://blop-98baa.firebaseio.com/");
+const refPre = new Firebase("https://blap-7c5ac.firebaseio.com/");
+
+const validComment = (name, comment, timeStamp, key, page) => {
+
+    refProd.push({
+      name: name,
+      comment: comment,
+      page: page,
+      time: timeStamp
+    });
+    refPre.child(key).remove();
+    window.location.reload();
+};
+
+const removeComment = (key) => {
+	refPre.child(key).remove();
+	window.location.reload();
+}
+
+refPre.on("child_added", function(snapshot) {
+	console.log(snapshot);
+  let comment = snapshot.val();
+  addComment(comment.name, comment.comment, comment.time, snapshot.name(), comment.page);
+});
+
+const addComment = (name, comment, timeStamp, key, page) => {
+  let comments = document.getElementById("comments");
+  comments.innerHTML = `<hr><h4>${name} says at <span>${timeStamp}, page:${page}</span></h4><p>${comment}</p><p><a href='#' onclick='validComment("${name}","${comment}","${timeStamp}", "${key}", "${page}");'>Valider</a></p>
+  <a href='#' onclick='removeComment("${key}");'>Supprimer</a></p>${comments.innerHTML}`;
+  //
+};
+</script>
+<h1 style="center">Administration des commentaires</h1>
+  <div class="container">
+    <div class="comment-box">
+      <div>
+        <h4 class="header">Comments</h4>
+        <div id="comments"></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
