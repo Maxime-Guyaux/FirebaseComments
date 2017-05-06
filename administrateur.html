@@ -37,7 +37,7 @@ refPre.on("child_added", function(snapshot) {
 
 const addComment = (name, comment, timeStamp, key, page) => {
   let comments = document.getElementById("comments");
-  comments.innerHTML = `<hr><h4>${name} says at <span>${timeStamp}, page:${page}</span></h4><p>${comment}</p><p><a href='#' onclick='validComment("${name}","${comment}","${timeStamp}", "${key}", "${page}");'>Valider</a></p>
+  comments.innerHTML = `<hr><h4>${unescape(name)} says at <span>${unescape(timeStamp)}, page:${unescape(page)}</span></h4><p>${unescape(comment)}</p><p><a href='#' onclick='validComment("${name}","${comment}","${timeStamp}", "${key}", "${page}");'>Valider</a></p>
   <a href='#' onclick='removeComment("${key}");'>Supprimer</a></p>${comments.innerHTML}`;
   //
 };
