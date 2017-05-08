@@ -4,13 +4,57 @@
 <head>
   <meta charset="utf-8">
   <title>Administrateur de commentaires</title>
-  <script src="https://cdn.firebase.com/v0/firebase.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-database.js"></script>
 </head>
 <body>
 <script>
-const refProd = new Firebase("https://blop-98baa.firebaseio.com/");
-const refPre = new Firebase("https://blap-7c5ac.firebaseio.com/");
+//Confiuration de la prod
+  var configProd = {
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: ""
+  };
+  firebase.initializeApp(configProd);
+
+//Auth sur la prod
+firebase.auth().signInWithEmailAndPassword("admin@email.com", "pass").catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  alert(error.message);
+  // ...
+});
+
+//Configuration de la preprod
+  var configPre = {
+    apiKey: "",
+    authDomain: "",
+    databaseURL: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: ""
+  };
+  var firebasePre = firebase.initializeApp(configPre, "pre");
+
+//Auth anonyme sur la preprod
+firebasePre.auth().signInAnonymously().catch(function(error) {
+  // Handle Errors here.
+  var errorCode = error.code;
+  var errorMessage = error.message;
+  alert(error.message);
+  // ...
+});
+
+
+//Définiriton des endpoints
+
+const refProd = firebase.database().ref();
+const refPre = firebasePre.database().ref();
 
 const validComment = (name, comment, timeStamp, key, page) => {
 
@@ -32,7 +76,7 @@ const removeComment = (key) => {
 refPre.on("child_added", function(snapshot) {
 	console.log(snapshot);
   let comment = snapshot.val();
-  addComment(comment.name, comment.comment, comment.time, snapshot.name(), comment.page);
+  addComment(comment.name, comment.comment, comment.time, snapshot.key, comment.page);
 });
 
 const addComment = (name, comment, timeStamp, key, page) => {

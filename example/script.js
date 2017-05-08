@@ -1,5 +1,5 @@
-const refProd = new Firebase("https://blop-98baa.firebaseio.com/");
-const refValid = new Firebase("https://blap-7c5ac.firebaseio.com/");
+const refProd = new Firebase("");
+const refValid = new Firebase("");
 
 const form = document.querySelector("form");
 
